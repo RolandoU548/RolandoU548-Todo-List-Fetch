@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-weight: lighter;
+}
+
+h1 {
+  text-align: center;
+  font-style: italic;
+  margin: 100px 0 20px;
+}
+
+ul {
+  padding: 0;
+  margin-bottom: 0;
+  box-shadow: 0 0 50px -15px rgb(128, 128, 128);
+}
+
+.container {
+  margin: auto;
+}
+
+ul li {
+  list-style: none;
+  padding: 5px;
+  border: solid 1px rgb(128, 128, 128);
+}
+
+input,
+input:focus {
+  outline: none;
+  border: none;
+  width: 100%;
+}
+
+ul li svg {
+  display: none;
+  float: right;
+}
+
+ul li:hover svg {
+  display: inline-block;
+}
