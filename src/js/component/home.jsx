@@ -1,9 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/home.css";
 
 const Home = () => {
   const [inputValue, setInputValue] = useState("");
   const [todos, setTodos] = useState([]);
+  const url = "https://playground.4geeks.com/apis/fake/todos/user/RolandoU548";
+  const options = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify([
+      {
+        done: false,
+        id: 1,
+        label: "rumbear",
+      },
+      {
+        done: false,
+        id: 1,
+        label: "joder",
+      },
+      {
+        done: false,
+        id: 1,
+        label: "molestar",
+      },
+      {
+        done: false,
+        id: 1,
+        label: "flojear",
+      },
+    ]),
+  };
+
+  useEffect(() => {
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => setTodos(todos.concat(data.map((tarea) => tarea.label))))
+      .catch((error) => console.error("Error", error));
+  }, []);
 
   return (
     <div className="container col-6">
@@ -17,14 +51,20 @@ const Home = () => {
             onKeyDown={(e) =>
               e.target.value != ""
                 ? e.key == "Enter"
-                  ? setTodos(todos.concat(inputValue))
+                  ? (() => {
+                      setTodos(todos.concat(inputValue));
+                      fetch(url, options)
+                        .then((response) => response.json())
+                        .then((data) => console.log(data))
+                        .catch((error) => console.error("Error", error));
+                    })()
                   : null
                 : null
             }
           />
         </li>
         {todos.map((todo, index) => (
-          <li>
+          <li key={index}>
             {todo}
             <svg
               onClick={() =>
@@ -49,14 +89,3 @@ const Home = () => {
 };
 
 export default Home;
-
-{
-  /* <i
-              class="fas fa-trash-alt"
-              onClick={() =>
-                setTodos(
-                  todos.filter((todo, currentIndex) => index != currentIndex)
-                )
-              }
-            ></i> */
-}
