@@ -14,7 +14,7 @@ h1 {
 ul {
   padding: 0;
   margin-bottom: 0;
-  box-shadow: 0 0 50px -15px rgb(128, 128, 128);
+  box-shadow: 0 0 50px -15px rgb(43, 43, 43);
 }
 
 .container {
@@ -31,7 +31,7 @@ input,
 input:focus {
   outline: none;
   border: none;
-  width: 100%;
+  width: 80%;
 }
 
 ul li svg {
@@ -40,5 +40,10 @@ ul li svg {
 }
 
 ul li:hover svg {
+  display: inline-block;
+}
+
+.borrar {
+  background-color: orange;
   display: inline-block;
 }
