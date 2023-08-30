@@ -4,40 +4,77 @@ import "../../styles/home.css";
 const Home = () => {
   const [inputValue, setInputValue] = useState("");
   const [todos, setTodos] = useState([]);
+  const [enviarTodos, setEnviarTodos] = useState(0);
   const url = "https://playground.4geeks.com/apis/fake/todos/user/RolandoU548";
   const options = {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify([
-      {
-        done: false,
-        id: 1,
-        label: "rumbear",
-      },
-      {
-        done: false,
-        id: 1,
-        label: "joder",
-      },
-      {
-        done: false,
-        id: 1,
-        label: "molestar",
-      },
-      {
-        done: false,
-        id: 1,
-        label: "flojear",
-      },
-    ]),
+    body:
+      todos.length > 0
+        ? JSON.stringify(
+            todos.map((todo, index) => {
+              return {
+                done: false,
+                id: index + 1,
+                label: todo,
+              };
+            })
+          )
+        : JSON.stringify([
+            {
+              done: false,
+              id: 1,
+              label: "example task",
+            },
+          ]),
   };
 
   useEffect(() => {
     fetch(url)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          if (response.status == 404) {
+            fetch(
+              "https://playground.4geeks.com/apis/fake/todos/user/RolandoU548",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "User-Agent": "Insomnia/2023.5.6",
+                },
+                body: "[]",
+              }
+            )
+              .then((response) => response.json())
+              .then((response) => console.log(response))
+              .catch((err) => console.error(err));
+          } else {
+            throw Error(response.statusText);
+          }
+        }
+        return response.json();
+      })
       .then((data) => setTodos(todos.concat(data.map((tarea) => tarea.label))))
-      .catch((error) => console.error("Error", error));
+      .catch((error) =>
+        console.error("Parece que ha habido un problema", error)
+      );
   }, []);
+
+  useEffect(() => {
+    console.log(todos);
+    if (enviarTodos > 0) {
+      fetch(url, options)
+        .then((response) => {
+          if (!response.ok) throw Error(response.statusText);
+          response.json();
+        })
+        .then((data) => console.log("Tareas enviadas exitosamente:", todos))
+        .catch((error) =>
+          console.error("Hubo un error al subir las tareas", error)
+        );
+    }
+    setEnviarTodos(enviarTodos + 1);
+  }, [todos]);
 
   return (
     <div className="container col-6">
@@ -53,10 +90,7 @@ const Home = () => {
                 ? e.key == "Enter"
                   ? (() => {
                       setTodos(todos.concat(inputValue));
-                      fetch(url, options)
-                        .then((response) => response.json())
-                        .then((data) => console.log(data))
-                        .catch((error) => console.error("Error", error));
+                      e.target.value = "";
                     })()
                   : null
                 : null
