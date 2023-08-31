@@ -44,7 +44,6 @@ ul li:hover svg {
 }
 
 .borrar {
-  height: 25px;
   padding: 5px;
   background-color: rgb(243, 142, 0);
   display: inline-block;
